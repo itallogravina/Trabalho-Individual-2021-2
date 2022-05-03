@@ -34,4 +34,4 @@ jobs:
           context: "{{defaultContext}}:aplicacao"
           # file: "/aplicacao/Dockerfile"
           push: true
-          tags: eduardopicolo/gces-deploy:latest 
+          tags: itallogravina/gces-deploy:latest 
