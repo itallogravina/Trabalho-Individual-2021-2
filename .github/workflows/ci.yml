@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  workflow_call:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      working-directory: ./aplicacao
+      run: docker-compose up -d --build
+
+  test:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Reset database and seed
+        working-directory: ./aplicacao
+        run: docker-compose run app rails db:reset
+      - name: Run test
+        working-directory: ./aplicacao
+        run: docker-compose run app rspec
+
+  Lint:
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Docker Compose Up
+        working-directory: ./aplicacao
+        run: docker-compose up -d 
+      - name: Run lint
+        working-directory: ./aplicacao
+        run: docker-compose run app bash -c "gem install rubocop; rubocop -A --fail-level F"
